@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joshua Kim</title>
+<meta name="description" content="Joshua Kim — Electrical & Computer Engineering at Carnegie Mellon. Embedded firmware, circuits, and hardware.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f6f9; --surface:#ffffff; --ink:#14171f; --muted:#5b6472;
+    --line:#e2e5ec; --accent:#1f63e8; --accent-soft:rgba(31,99,232,.09);
+    --grid:rgba(20,23,31,.045);
+    --font-display:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-body:'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1117; --surface:#151a22; --ink:#e7ecf3; --muted:#8a94a6;
+      --line:#232a35; --accent:#5b93ff; --accent-soft:rgba(91,147,255,.14);
+      --grid:rgba(231,236,243,.05);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1117; --surface:#151a22; --ink:#e7ecf3; --muted:#8a94a6;
+    --line:#232a35; --accent:#5b93ff; --accent-soft:rgba(91,147,255,.14);
+    --grid:rgba(231,236,243,.05);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:28px 28px;
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    min-height:100vh;
+  }
+
+  .wrap{max-width:620px;margin:0 auto;padding:clamp(2rem,6vw,4.5rem) clamp(1.25rem,5vw,2rem) 3rem}
+
+  .theme{
+    position:fixed;top:1rem;right:1rem;width:40px;height:40px;
+    display:grid;place-items:center;border-radius:10px;
+    background:var(--surface);border:1px solid var(--line);color:var(--muted);
+    cursor:pointer;transition:color .15s ease,border-color .15s ease;
+  }
+  .theme:hover{color:var(--accent);border-color:var(--accent)}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .theme svg{width:18px;height:18px}
+
+  header{margin-bottom:2.4rem}
+  h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.4rem,9vw,3.5rem);
+    letter-spacing:-.03em;
+    line-height:1.02;
+    margin:0;
+  }
+  .role{
+    font-family:var(--font-display);
+    font-weight:500;
+    color:var(--accent);
+    margin:.7rem 0 0;
+    font-size:clamp(1rem,3.4vw,1.15rem);
+    letter-spacing:-.01em;
+  }
+  .trace{display:block;width:100%;height:42px;margin:1.1rem 0 1.2rem;overflow:visible}
+  .trace path{
+    fill:none;stroke:var(--accent);stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
+    vector-effect:non-scaling-stroke;
+    stroke-dasharray:1500;stroke-dashoffset:1500;
+    animation:draw 1.4s .25s cubic-bezier(.4,0,.1,1) forwards;
+  }
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .about{color:var(--muted);max-width:52ch;margin:0;font-size:1.02rem}
+
+  nav{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+  .link{
+    display:flex;align-items:center;gap:1rem;
+    padding:1.05rem .35rem;
+    border-bottom:1px solid var(--line);
+    text-decoration:none;color:var(--ink);
+    position:relative;
+    transition:padding-left .18s ease,color .15s ease,background .15s ease;
+  }
+  .link:hover{color:var(--accent);padding-left:.85rem;background:var(--accent-soft)}
+  .link:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:6px}
+  .ico{
+    flex:none;width:38px;height:38px;display:grid;place-items:center;
+    border-radius:9px;background:var(--accent-soft);color:var(--accent);
+    transition:background .15s ease;
+  }
+  .ico svg{width:20px;height:20px;fill:currentColor}
+  .link-main{display:flex;flex-direction:column;min-width:0}
+  .link-label{font-family:var(--font-display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em}
+  .link-dest{color:var(--muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .link:hover .link-dest{color:var(--accent)}
+
+  .link.pending{color:var(--muted);cursor:default}
+  .link.pending:hover{padding-left:.35rem;background:transparent;color:var(--muted)}
+  .link.pending .ico{background:var(--line);color:var(--muted)}
+  .link.pending .link-dest{font-style:italic}
+
+  footer{margin-top:2.4rem;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+  <button class="theme" id="themeBtn" aria-label="Toggle light or dark theme"></button>
+
+  <main class="wrap">
+    <header>
+      <h1>Joshua Kim</h1>
+      <p class="role">Electrical &amp; Computer Engineering at Carnegie Mellon</p>
+      <svg class="trace" viewBox="0 0 620 40" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 28 L110 28 L110 12 L190 12 L190 28 L262 28 C286 28 286 10 310 10 C334 10 334 28 358 28 L430 28 L430 12 L510 12 L510 28 L620 28"/>
+      </svg>
+      <p class="about">I build embedded firmware, circuits, and the boards they run on. Focused on hardware, robotics, and medical devices.</p>
+    </header>
+
+    <nav>
+      <a class="link" id="portfolio" href="#PENDING" data-config="portfolioUrl">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v3h20V8a2 2 0 0 0-2-2h-3V5a2 2 0 0 0-2-2H9Zm0 3V5h6v1H9ZM2 13v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6h-8v2h-4v-2H2Z"/></svg></span>
+        <span class="link-main"><span class="link-label">Portfolio</span><span class="link-dest">projects, demos &amp; write-ups</span></span>
+      </a>
+
+      <a class="link" id="resume" href="#PENDING" data-config="resumeUrl">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6Zm7 1.5L18.5 9H13V3.5ZM8 13h8v1.6H8V13Zm0 3.2h8v1.6H8v-1.6ZM8 9.8h3v1.6H8V9.8Z"/></svg></span>
+        <span class="link-main"><span class="link-label">Résumé</span><span class="link-dest">PDF</span></span>
+      </a>
+
+      <a class="link" href="https://github.com/joshuak3" target="_blank" rel="noopener">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></span>
+        <span class="link-main"><span class="link-label">GitHub</span><span class="link-dest">github.com/joshuak3</span></span>
+      </a>
+
+      <a class="link" href="https://linkedin.com/in/joshua-c-kim" target="_blank" rel="noopener">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></span>
+        <span class="link-main"><span class="link-label">LinkedIn</span><span class="link-dest">in/joshua-c-kim</span></span>
+      </a>
+
+      <a class="link" href="mailto:kimcjoshua@gmail.com">
+        <span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v.4l-10 6-10-6V6Zm0 2.7V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8.7l-9.49 5.69a1 1 0 0 1-1.02 0L2 8.7Z"/></svg></span>
+        <span class="link-main"><span class="link-label">Email</span><span class="link-dest">kimcjoshua@gmail.com</span></span>
+      </a>
+    </nav>
+
+    <footer>Pittsburgh, PA</footer>
+  </main>
+
+<script>
+  // ---- Add your two links here (leave empty until you have them) ----
+  const CONFIG = {
+    portfolioUrl: "https://docs.google.com/document/d/1PB6zrzUOA_0qgDj_fzIdRtIDGH0fJsU5ARexb0LEo0c/preview",
+    resumeUrl: "https://drive.google.com/file/d/1WyvEg6BHu-kEyBMj2McbiayiepxcT5eV/view?usp=sharing"
+  };
+  // ------------------------------------------------------------------
+
+  document.querySelectorAll('[data-config]').forEach(function(a){
+    var url = CONFIG[a.getAttribute('data-config')];
+    if(url && url.trim()){
+      a.href = url.trim();
+      a.target = "_blank";
+      a.rel = "noopener";
+    } else {
+      a.classList.add('pending');
+      var dest = a.querySelector('.link-dest');
+      if(dest) dest.textContent = 'add your link';
+      a.addEventListener('click', function(e){ e.preventDefault(); });
+    }
+  });
+
+  // Theme toggle (respects system default; remembers a manual choice)
+  var root = document.documentElement, btn = document.getElementById('themeBtn');
+  var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  var MOON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>';
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function effective(){ return root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+  function paint(){ btn.innerHTML = effective() === 'dark' ? SUN : MOON; }
+  var s = stored(); if(s) root.dataset.theme = s;
+  paint();
+  btn.addEventListener('click', function(){
+    var next = effective() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try{ localStorage.setItem('theme', next); }catch(e){}
+    paint();
+  });
+</script>
+</body>
+</html>
